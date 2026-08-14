@@ -32,6 +32,13 @@ hs_err_pid*
 replay_pid*
 build_output*.txt
 
+# Local legacy helper files (kept on this machine, never published)
+/build_log.txt
+/find_lines.py
+/merge_foods.py
+/package.json
+/package-lock.json
+
 # Operating-system files
 .DS_Store
 Thumbs.db
