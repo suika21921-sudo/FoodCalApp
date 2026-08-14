@@ -1,0 +1,118 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "e6b561aa2cbb42e8807bce898bebe800",
+    "entities": [
+      {
+        "tableName": "foods",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fdcId` INTEGER NOT NULL, `nameEn` TEXT NOT NULL, `nameZh` TEXT NOT NULL, `nameJa` TEXT NOT NULL, `categoryEn` TEXT, `categoryZh` TEXT, `categoryJa` TEXT, `energyKcal` REAL, `proteinG` REAL, `availableCarbG` REAL, `carbByDiffG` REAL, `fiberG` REAL, `fatG` REAL, `sodiumMg` REAL, `cholesterolMg` REAL, PRIMARY KEY(`fdcId`))",
+        "fields": [
+          {
+            "fieldPath": "fdcId",
+            "columnName": "fdcId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameEn",
+            "columnName": "nameEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameZh",
+            "columnName": "nameZh",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameJa",
+            "columnName": "nameJa",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoryEn",
+            "columnName": "categoryEn",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "categoryZh",
+            "columnName": "categoryZh",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "categoryJa",
+            "columnName": "categoryJa",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "energyKcal",
+            "columnName": "energyKcal",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "proteinG",
+            "columnName": "proteinG",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "availableCarbG",
+            "columnName": "availableCarbG",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "carbByDiffG",
+            "columnName": "carbByDiffG",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fiberG",
+            "columnName": "fiberG",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fatG",
+            "columnName": "fatG",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sodiumMg",
+            "columnName": "sodiumMg",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cholesterolMg",
+            "columnName": "cholesterolMg",
+            "affinity": "REAL",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "fdcId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e6b561aa2cbb42e8807bce898bebe800')"
+    ]
+  }
+}

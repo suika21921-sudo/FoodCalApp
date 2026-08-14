@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Mealoo" parent="android:Theme.Material.NoActionBar">
+        <!-- App background color for dark mode before Compose renders -->
+        <item name="android:windowBackground">@color/md_theme_dark_background</item>
+    </style>
+
+    <style name="MealooDatePickerDark" parent="@android:style/Theme.DeviceDefault.Dialog" />
+
+</resources>

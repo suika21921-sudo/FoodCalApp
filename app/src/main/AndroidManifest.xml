@@ -1,0 +1,106 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mealoo.app">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+        <package android:name="com.google.android.apps.bard" />
+    </queries>
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Mealoo"
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="31">
+
+        <!-- FileProvider：给裁切/分享用 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
+        <!-- Vulkan 关闭：保留你原设置 -->
+        <meta-data
+            android:name="android.graphics.use_vulkan"
+            android:value="false" />
+
+        <receiver
+            android:name=".notify.PlanActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.mealoo.app.ACTION_PLAN_CONFIRM" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".widget.PlanWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.mealoo.app.ACTION_WIDGET_REFRESH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/plan_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.WidgetActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.mealoo.app.ACTION_WIDGET_REFRESH" />
+            </intent-filter>
+        </receiver>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Mealoo">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="mealoo" android:host="import" />
+            </intent-filter>
+        </activity>
+
+        <!-- uCrop 裁切页 -->
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Mealoo" />
+    </application>
+</manifest>

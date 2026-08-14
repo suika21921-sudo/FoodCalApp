@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 允许暴露 cache 里的临时图（我们就是放这里） -->
+    <cache-path name="cache" path="."/>
+    <!-- 如后续需要也可暴露 files 目录 -->
+    <files-path name="files" path="."/>
+</paths>

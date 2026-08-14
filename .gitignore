@@ -1,0 +1,37 @@
+# Android Studio / IntelliJ
+*.iml
+.idea/
+.vscode/
+
+# Gradle, Kotlin and Android build output
+.gradle/
+.kotlin/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+
+# Local machine and service configuration
+local.properties
+app/google-services.json
+.firebaserc
+.env
+.env.*
+!.env.example
+functions/.openai_key
+
+# Node / Firebase Functions
+**/node_modules/
+functions/lib/
+
+# Logs, crash dumps and temporary output
+*.log
+hs_err_pid*
+replay_pid*
+build_output*.txt
+
+# Operating-system files
+.DS_Store
+Thumbs.db

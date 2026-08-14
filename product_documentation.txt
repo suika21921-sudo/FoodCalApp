@@ -1,0 +1,109 @@
+Mealoo Product Documentation
+
+1. Overview
+   Mealoo is a comprehensive food tracking, meal planning, and inventory management application designed to help users manage their diet, reduce food waste, and optimize grocery spending. It integrates inventory tracking with meal planning, offers advanced pricing calculations for shopping lists, and provides AI-powered recipe generation. The app supports local-first data storage with Google Drive backup and optional community features.
+
+2. Core Modules & Functionality
+
+2.1. Dietary Tracking (Main Screen & Calendar)
+   - **Daily Dashboard (MainScreen):**
+     - Displays daily intake summary (Calories, Protein, Carbs, Fats).
+     - Tracks water, caffeine, and alcohol consumption with specific metrics (e.g., caffeine metabolism estimation).
+     - Provides a timeline view of meals (Breakfast, Lunch, Dinner, Snacks).
+     - Calculates daily nutrition scores based on intake quality.
+   - **Calendar View (CalendarPage):**
+     - Monthly overview of intake history.
+     - Visual indicators for daily goal completion (calories/macros).
+     - Detailed daily summaries for past dates.
+   - **Intake Logging:**
+     - Supports adding "Eat" (food) and "Drink" entries.
+     - Tracks detailed nutrition (energy, macros, micronutrients).
+     - Integration with food database (USDA, local JP/TW datasets).
+
+2.2. Inventory Management (StoragePage)
+   - **Storage Locations:** Manages items in Pantry, Fridge, and Freezer.
+   - **Item Details:** Tracks quantity, unit, expiry date, purchase cost, and source.
+   - **Expiry Management:**
+     - Color-coded expiry indicators (Expired, Expiring Soon).
+     - Notifications/Alerts for items nearing expiry.
+   - **Thawing Workflow:**
+     - Dedicated logic for moving items from Freezer to Fridge ("Thawing").
+     - Tracks "Thaw" history in item notes.
+   - **Consumption:**
+     - Direct "Consume" action to deduct inventory and log as intake simultaneously.
+     - Support for partial consumption.
+
+2.3. Shopping & Pricing Engine
+   - **Shopping List:**
+     - Auto-generates list based on meal plan deficiencies.
+     - Supports manual item addition.
+   - **Advanced Pricing Engine (PricingEngine):**
+     - Handles complex discount rules:
+       - Percent/Amount off per item.
+       - Buy X Get Y (free or discounted).
+       - Bundle pricing (e.g., 3 for $100).
+       - Tiered pricing by quantity or spend.
+       - Conditional discounts (payment method/store specific).
+     - Calculates subtotal, taxes, fees, and final payable amount.
+     - Allocates effective cost per unit (considering freebies and waste).
+   - **Savings Dashboard:**
+     - Tracks money saved from discounts over time.
+     - Ranks top shops and events by savings.
+     - Visualizes savings trends (7-day/30-day).
+
+2.4. Meal Planning (MenuPlanningPage & Sandbox)
+   - **Menu Planner:**
+     - Drag-and-drop or select interface to plan meals for specific dates.
+     - Checks inventory availability during planning.
+     - Visualizes calorie targets per meal.
+   - **Diet Sandbox (SandboxFeature):**
+     - A simulation environment to experiment with diet changes.
+     - "Draft" mode to plan without affecting actual records initially.
+     - Simulates weight impact based on projected calorie balance (Input vs. TDEE).
+     - Supports "Copy Day" to quickly replicate meal structures.
+
+2.5. Recipes & Community (RecipePage)
+   - **Recipe Management:**
+     - Create, edit, and store recipes.
+     - Auto-calculates total nutrition based on ingredients.
+     - Supports tags, steps, and images.
+   - **AI Recipe Generator (Prompt Builder):**
+     - Builds prompts based on user inventory (to use up leftovers) and preferences.
+     - Injects generated recipes back into the app via JSON parsing ("Magic Import").
+   - **Community:**
+     - Share recipes to a public feed (Firestore).
+     - Repost (fork) recipes from others with modifications.
+     - "Tinder-like" swipe interface for discovering community recipes.
+
+2.6. User Profile & Settings (SettingPage)
+   - **Profile Management:** Height, weight, age, gender, activity level.
+   - **Goal Setting:** Target weight, goal type (Lose/Gain/Maintain), speed.
+   - **Macro Configuration:**
+     - Auto-calculation of TDEE and BMR.
+     - Customizable macro ratios (Protein/Fat/Carb priorities).
+     - Meal timing and ratio distribution (e.g., heavy breakfast vs. heavy dinner).
+   - **Health Preferences:** Diet type (Keto, Vegan, etc.), allergies.
+
+3. Technical Architecture
+
+3.1. Data Layer
+   - **Local Database (Room):** Stores Foods, Inventory, Shopping lists, Savings records, and Plans.
+     - Entities: `FoodEntity`, `InventoryItemEntity`, `IntakeEntryEntity`, `MealPlanEntryEntity`, `SavingsRecordEntity`, etc.
+   - **DataStore:** Manages user preferences and legacy configurations.
+   - **Repositories:** `InventoryRepository`, `IntakeRepository`, `MealPlanRepository`, etc., abstract data access.
+
+3.2. Cloud & Sync
+   - **Google Drive:** Used for backing up personal intake history (JSON format) to user's private app folder.
+   - **Firebase Firestore:** Used for public community recipe sharing (read/write).
+   - **Firebase Auth:** Handles user authentication.
+
+3.3. Key Utilities
+   - **PricingEngine:** Standalone Kotlin logic for executing `EventRule`s on a `Cart`.
+   - **InventoryAlertEngine:** Computes low-stock and expiry alerts.
+   - **NutritionScoreUtils:** Algorithms for grading food healthiness.
+   - **PromptFillerEngine:** Template engine for constructing LLM prompts.
+
+4. User Experience Highlights
+   - **Visuals:** Uses Material 3 Design, custom charts (MPAndroidChart), and animations.
+   - **Localization:** Supports English, Traditional Chinese, and Japanese.
+   - **Widgets:** Home screen widgets for quick view of daily plan/intake.

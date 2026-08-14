@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 你原本的 App 主题，保持不动 -->
+    <style name="Theme.Mealoo" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- 统一给 DatePicker 用的深色 Dialog 主题（只靠系统现成的 Theme） -->
+    <style name="MealooDatePickerDark" parent="@android:style/Theme.DeviceDefault.Dialog" />
+
+</resources>

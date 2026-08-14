@@ -1,0 +1,94 @@
+[versions]
+# --- 核心與工具 (校正為真實存在的穩定版) ---
+agp = "8.7.3"            # 修正: 8.9.0 不存在，改用穩定的 8.5.2
+kotlin = "2.0.21"         # 保持: Kotlin 2.0
+coreKtx = "1.13.1"        # 修正: 1.15.0 不存在，改用 1.13.1
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+lifecycleRuntimeKtx = "2.8.4"
+activityCompose = "1.9.1"
+composeBom = "2024.06.00"
+room = "2.6.1"
+ksp = "2.0.21-1.0.27"     # KSP 必須嚴格對應 Kotlin 2.0.21
+
+# --- 關鍵功能 ---
+navigationCompose = "2.8.0"
+kotlinxSerialization = "1.7.1"
+datastore = "1.1.1"
+materialIcons = "1.6.8"
+mpAndroidChart = "v3.1.0"
+accompanist = "0.34.0"
+googleApiClient = "2.6.0"
+googleApiDrive = "v3-rev20240123-2.0.0"
+
+# --- 訂閱與支付 ---
+revenuecat = "8.0.0"
+ucrop = "2.2.8"
+coil = "2.7.0"
+
+# --- Firebase ---
+firebaseBom = "33.1.2"
+googleServices = "4.4.2"
+
+[libraries]
+# --- 核心 ---
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+google-http-client-android = { group = "com.google.http-client", name = "google-http-client-android", version = "1.44.1" }
+
+# --- Compose UI & Navigation ---
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIcons" }
+
+# --- 資料處理 ---
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
+
+# --- Google 服務 & Drive ---
+google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version.ref = "googleApiClient" }
+google-api-services-drive = { group = "com.google.apis", name = "google-api-services-drive", version.ref = "googleApiDrive" }
+google-http-client-gson = { group = "com.google.http-client", name = "google-http-client-gson", version = "1.44.2" }
+
+# --- 第三方庫 ---
+mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpAndroidChart" }
+accompanist-flowlayout = { group = "com.google.accompanist", name = "accompanist-flowlayout", version.ref = "accompanist" }
+
+# --- 訂閱與圖片 ---
+revenuecat-purchases = { group = "com.revenuecat.purchases", name = "purchases", version.ref = "revenuecat" }
+ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "ucrop" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+# --- Firebase ---
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage-ktx" }
+
+# --- 資料庫 (Room) ---
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+# --- 測試 ---
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
