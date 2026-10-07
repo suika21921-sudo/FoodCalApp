@@ -1,0 +1,29 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Community recipes are a public, read-only feed. Publishing and moderation
+    // must use a trusted server or Admin SDK, which bypasses these client rules.
+    match /community/recipes/shared/{recipeId} {
+      allow read: if true;
+      allow create, update, delete: if false;
+    }
+
+    // Public item metadata and server-generated AI assistance are readable by
+    // clients, but only trusted server code may create or modify these fields.
+    match /public/info/items/{itemId} {
+      allow read: if true;
+      allow create, update, delete: if false;
+    }
+
+    // Rate-limit counters are exclusively owned by Cloud Functions/Admin SDK.
+    match /_functionRateLimits/{rateLimitId} {
+      allow read, write: if false;
+    }
+
+    // Every path not explicitly listed above is denied by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,11 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Firebase Storage is not used by the current application source.
+    // Keep every object private until a reviewed storage data model exists.
+    match /{object=**} {
+      allow read, write: if false;
+    }
+  }
+}
