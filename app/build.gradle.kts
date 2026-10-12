@@ -5,9 +5,27 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.google.services)
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
+}
+
+val cloudBuildEnabled = providers.gradleProperty("mealoo.cloud")
+    .orNull
+    ?.toBooleanStrictOrNull()
+    ?: false
+
+if (cloudBuildEnabled) {
+    check(!file("google-services.json").exists()) {
+        "Legacy app/google-services.json is not accepted for cloud builds. " +
+            "Move contributor-owned configuration to app/src/cloud/google-services.json."
+    }
+    check(file("src/cloud/google-services.json").exists()) {
+        "Cloud builds require app/src/cloud/google-services.json from a Firebase project you control. " +
+            "Standalone builds do not require this file."
+    }
+    apply(plugin = "com.google.gms.google-services")
+} else {
+    logger.lifecycle("Mealoo standalone mode: Firebase dependencies and Google Services processing are disabled.")
 }
 
 val localProperties = Properties().apply {
@@ -32,6 +50,20 @@ android {
 
         ndk {
             abiFilters += listOf("arm64-v8a")
+        }
+    }
+
+    flavorDimensions += "deployment"
+    productFlavors {
+        create("standalone") {
+            dimension = "deployment"
+            isDefault = true
+            buildConfigField("boolean", "CLOUD_FEATURES_ENABLED", "false")
+        }
+        create("cloud") {
+            dimension = "deployment"
+            buildConfigField("boolean", "CLOUD_FEATURES_ENABLED", "true")
+            versionNameSuffix = "-cloud"
         }
     }
 
@@ -73,6 +105,15 @@ android {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
         }
+    }
+}
+
+androidComponents {
+    beforeVariants(selector().withFlavor("deployment" to "cloud")) { variantBuilder ->
+        if (!cloudBuildEnabled) variantBuilder.enable = false
+    }
+    beforeVariants(selector().withFlavor("deployment" to "standalone")) { variantBuilder ->
+        if (cloudBuildEnabled) variantBuilder.enable = false
     }
 }
 
@@ -126,11 +167,11 @@ dependencies {
     implementation(libs.accompanist.flowlayout)
     implementation("com.jakewharton:process-phoenix:2.1.2")
 
-    // --- Firebase ---
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.storage)
+    // --- Firebase (optional cloud flavor only) ---
+    add("cloudImplementation", platform(libs.firebase.bom))
+    add("cloudImplementation", libs.firebase.auth)
+    add("cloudImplementation", libs.firebase.firestore)
+    add("cloudImplementation", libs.firebase.storage)
 
     // --- 資料庫 (Room) ---
     implementation(libs.androidx.room.runtime)

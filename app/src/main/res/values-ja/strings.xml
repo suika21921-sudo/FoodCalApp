@@ -1094,4 +1094,12 @@
     <string name="common_number_one_decimal_desc">%1$.1f</string>
     <string name="common_date_range_desc">%1$s – %2$s</string>
     <string name="common_price_placeholder">0.00</string>
+    <string name="edit_meal_customization">食事のカスタマイズを編集</string>
+    <string name="track_color">トラックの色</string>
+    <string name="progress_bar_icon">進捗バーのアイコン</string>
+    <string name="cloud_ai_unavailable_standalone">スタンドアロン版ではクラウド AI 連携を利用できません。プロンプトのコピーとローカル llama.cpp 機能は引き続き利用できます。</string>
+    <string name="data_use_firebase_desc">この任意のクラウド版には、従来の Firebase ID とコミュニティ用アダプターが含まれます。Google Drive のログインは Firebase とは別です。</string>
+    <string name="data_use_standalone_cloud_desc">このスタンドアロン版には Firebase 製品 SDK と設定、および外部クラウド AI は含まれません。Google Drive のログインは Firebase とは別です。</string>
+    <string name="copy_prompt_action">プロンプトをコピー</string>
+    <string name="send_to_gemini">Gemini に送信</string>
 </resources>

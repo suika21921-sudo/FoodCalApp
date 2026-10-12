@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Base64
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.google.firebase.auth.FirebaseAuth
+import com.mealoo.app.cloud.FirebaseCloudBridge
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -52,7 +52,7 @@ object SecurityHelper {
      * Use SHA-256 to ensure exactly 32 bytes.
      */
     private fun getCloudSecretKey(): SecretKeySpec? {
-        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return null
+        val uid = FirebaseCloudBridge.currentUserId() ?: return null
         val sha256 = MessageDigest.getInstance("SHA-256")
         // Optionally add a fixed salt to the UID
         val seed = "MEALOO_CLOUD_SALT_$uid"

@@ -1,3 +1,5 @@
+@file:Suppress("ProduceStateDoesNotAssignValue")
+
 package com.mealoo.app.ui
 import android.annotation.SuppressLint
 import android.content.Context
@@ -54,7 +56,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.res.stringResource
-import com.google.firebase.auth.FirebaseAuth
+
 import java.io.File
 import com.mealoo.app.model.*
 import com.mealoo.app.R

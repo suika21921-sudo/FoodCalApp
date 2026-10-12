@@ -1,3 +1,5 @@
+@file:Suppress("ProduceStateDoesNotAssignValue")
+
 package com.mealoo.app.ui
 
 import android.content.res.Configuration

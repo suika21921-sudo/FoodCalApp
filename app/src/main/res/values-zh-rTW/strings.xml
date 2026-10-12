@@ -1093,4 +1093,12 @@
     <string name="common_price_placeholder">0.00</string>
     <string name="common_date_range_desc">%1$s – %2$s</string>
     <string name="common_number_one_decimal_desc">%1$.1f</string>
+    <string name="edit_meal_customization">編輯餐次自訂設定</string>
+    <string name="track_color">軌道顏色</string>
+    <string name="progress_bar_icon">進度條圖示</string>
+    <string name="cloud_ai_unavailable_standalone">獨立版不提供雲端 AI 轉交功能。你仍可複製提示詞或使用本機 llama.cpp 功能。</string>
+    <string name="data_use_firebase_desc">此選用雲端版本包含舊版 Firebase 身分與社群介面卡。Google Drive 登入與 Firebase 分開。</string>
+    <string name="data_use_standalone_cloud_desc">此獨立版不包含 Firebase 產品 SDK 或設定，也不包含外部雲端 AI。Google Drive 登入與 Firebase 分開。</string>
+    <string name="copy_prompt_action">複製提示詞</string>
+    <string name="send_to_gemini">傳送至 Gemini</string>
 </resources>
