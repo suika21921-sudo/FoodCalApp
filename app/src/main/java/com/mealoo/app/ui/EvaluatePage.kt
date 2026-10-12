@@ -65,6 +65,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.api.services.drive.Drive
 import com.mealoo.app.R
+import com.mealoo.app.cloud.ExternalCloudAiHandoff
 import com.mealoo.app.data.IntakeDataStore
 import com.mealoo.app.data.DiscountEventDataStore
 import com.mealoo.app.data.PromptKind
@@ -2103,27 +2104,6 @@ fun AiInjectFeature(
                 onCopy = {
                     clipboardManager.setText(AnnotatedString(generatedPrompt))
                     Toast.makeText(context, context.getString(R.string.toast_prompt_copied), Toast.LENGTH_SHORT).show()
-
-                    try {
-                        val intent = android.content.Intent(
-                            android.content.Intent.ACTION_VIEW,
-                            android.net.Uri.parse("https://gemini.google.com/app")
-                        )
-                        intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-
-                        context.startActivity(intent)
-
-                    } catch (e: android.content.ActivityNotFoundException) {
-                        e.printStackTrace() // 會印在 System.err
-                        Toast.makeText(context, context.getString(R.string.error_no_browser), Toast.LENGTH_LONG).show()
-
-                    } catch (e: Exception) {
-                        // 其他錯誤
-                        e.printStackTrace()
-                        // 用 System.out.println 繞過 Logcat 過濾器
-                        println("MEALOO_ERROR_TAG: 無法開啟網頁: $e")
-                        Toast.makeText(context, "開啟失敗: ${e.javaClass.simpleName}", Toast.LENGTH_LONG).show()
-                    }
                 }
             )
         }
@@ -2185,97 +2165,63 @@ private fun GeneratorSection(
             )
 
             Spacer(Modifier.height(12.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Button(
-                    onClick = {
-                        clipboardManager.setText(AnnotatedString(generatedPrompt))
-
-                        val sendIntent = android.content.Intent().apply {
-                            action = android.content.Intent.ACTION_SEND
-                            putExtra(android.content.Intent.EXTRA_TEXT, generatedPrompt) // 傳入 Prompt
-                            type = "text/plain"
-                            setPackage("com.google.android.apps.bard") // 強制指定給 Gemini App
-                            addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                        }
-
-                        try {
-                            context.startActivity(sendIntent)
-                            Toast.makeText(context, context.getString(R.string.toast_sent_to_gemini), Toast.LENGTH_SHORT).show()
-                        } catch (e: android.content.ActivityNotFoundException) {
-                            Log.e("MealooDebug", "未安裝或找不到 Gemini App: $e")
-                            Toast.makeText(context, context.getString(R.string.toast_gemini_not_installed), Toast.LENGTH_LONG).show()
-                        }
-                    },
-                    modifier = Modifier.weight(1f),
-                    enabled = true, // 如果要嚴謹點，可以改為 enabled = generatedPrompt.isNotBlank()
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f)),
+            if (ExternalCloudAiHandoff.isAvailable) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(stringResource(R.string.open_gemini_app), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                }
-
-                Button(
-                    onClick = {
-                        val tag = "Mealoo_Outbound"
-                        Log.d(tag, "====== 準備送往 Gemini ======")
-
-                        // 0. 兜底：先寫入剪貼簿，確保無論如何使用者都能手動貼上
-                        clipboardManager.setText(AnnotatedString(generatedPrompt))
-
-                        // 1. 首選策略：透過 ACTION_SEND 喚醒 Gemini App
-                        val sendIntent = android.content.Intent().apply {
-                            action = android.content.Intent.ACTION_SEND
-                            putExtra(android.content.Intent.EXTRA_TEXT, generatedPrompt)
-                            type = "text/plain"
-                            setPackage("com.google.android.apps.bard") // 指定 Gemini App
-                            addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                        }
-
-                        try {
-                            Log.d(tag, "嘗試使用 ACTION_SEND 開啟 Gemini App...")
-                            context.startActivity(sendIntent)
-                            Toast.makeText(context, "已傳送至 Gemini App", Toast.LENGTH_SHORT).show()
-                        } catch (e: android.content.ActivityNotFoundException) {
-                            Log.w(tag, "未安裝 Gemini App，啟動 Web Fallback")
-
-                            // 2. 備用策略：沒裝 App，退回瀏覽器網頁版
-                            val encodedPrompt = try {
-                                java.net.URLEncoder.encode(generatedPrompt, "UTF-8")
-                            } catch (ex: Exception) { "" }
-
-                            // 檢查 URL 安全長度 (瀏覽器 URL 限制約 2000 字元)
-                            val targetUrl = if (encodedPrompt.length < 1800) {
-                                "https://gemini.google.com/app?q=$encodedPrompt"
+                    Button(
+                        onClick = {
+                            clipboardManager.setText(AnnotatedString(generatedPrompt))
+                            val opened = ExternalCloudAiHandoff.openHome(context)
+                            val message = if (opened) {
+                                R.string.toast_prompt_copied
                             } else {
-                                Log.w(tag, "Prompt 太長，放棄 URL 帶入，純開網頁")
-                                "https://gemini.google.com/app"
+                                R.string.toast_gemini_not_installed
                             }
+                            Toast.makeText(context, context.getString(message), Toast.LENGTH_SHORT).show()
+                        },
+                        modifier = Modifier.weight(1f),
+                        enabled = canCopy,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f)
+                        )
+                    ) {
+                        Text(stringResource(R.string.open_gemini_app), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
 
-                            val webIntent = android.content.Intent(
-                                android.content.Intent.ACTION_VIEW,
-                                android.net.Uri.parse(targetUrl)
-                            )
-                            webIntent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-
-                            try {
-                                context.startActivity(webIntent)
-                                if (encodedPrompt.length >= 1800) {
-                                    Toast.makeText(context, "內容過長已複製，請手動貼上", Toast.LENGTH_LONG).show()
-                                } else {
-                                    Toast.makeText(context, "已開啟 Gemini 網頁版", Toast.LENGTH_SHORT).show()
-                                }
-                            } catch (e2: Exception) {
-                                Log.e(tag, "Web Fallback 失敗", e2)
-                                Toast.makeText(context, "無法開啟瀏覽器", Toast.LENGTH_SHORT).show()
+                    Button(
+                        onClick = {
+                            clipboardManager.setText(AnnotatedString(generatedPrompt))
+                            val sent = ExternalCloudAiHandoff.sendPrompt(context, generatedPrompt)
+                            val message = if (sent) {
+                                R.string.toast_sent_to_gemini
+                            } else {
+                                R.string.toast_gemini_not_installed
                             }
-                        }
-                    },
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4285F4))
-                ) {
-                    Text("送往 Gemini", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Toast.makeText(context, context.getString(message), Toast.LENGTH_SHORT).show()
+                        },
+                        modifier = Modifier.weight(1f),
+                        enabled = canCopy,
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4285F4))
+                    ) {
+                        Text(stringResource(R.string.send_to_gemini), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
+                }
+            } else {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = stringResource(R.string.cloud_ai_unavailable_standalone),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Button(
+                        onClick = onCopy,
+                        enabled = canCopy,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.copy_prompt_action))
+                    }
                 }
             }
         }

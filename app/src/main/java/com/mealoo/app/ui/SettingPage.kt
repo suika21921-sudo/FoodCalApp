@@ -1,5 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
+@file:Suppress("ProduceStateDoesNotAssignValue")
+
 package com.mealoo.app.ui
 
 import android.util.Log
@@ -379,6 +381,19 @@ fun AccountAndSyncScreen(
                         modifier = Modifier.padding(20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Text(
+                            text = stringResource(
+                                if (com.mealoo.app.BuildConfig.CLOUD_FEATURES_ENABLED) {
+                                    R.string.data_use_firebase_desc
+                                } else {
+                                    R.string.data_use_standalone_cloud_desc
+                                }
+                            ),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(Modifier.height(12.dp))
                         if (isConnected) {
                             Icon(
                                 imageVector = Icons.Filled.CloudDone, 

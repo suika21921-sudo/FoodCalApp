@@ -3,20 +3,14 @@ package com.mealoo.app.data
 import com.mealoo.app.model.EatEntry
 import com.mealoo.app.model.DrinkEntry
 import com.mealoo.app.model.IntakeEntry
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
 import android.util.Log
-import com.google.firebase.Firebase
 import com.mealoo.app.model.RecipeIngredient
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.firestore
 import com.mealoo.app.model.RecipeEntry
 import com.mealoo.app.util.alcoholGramFromVolume
 import kotlin.math.max
 import kotlinx.serialization.Serializable
 import com.mealoo.app.util.*
-import android.content.Context
+
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.flowOf
@@ -134,9 +128,6 @@ class IntakeRepository(
     /** Google Drive service，可為 null（本機模式） */
     private val drive: Drive? = null
 ) {
-    private val firestore = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
-
     /** 是否有可用的 Drive（給 UI 判斷用，可選） */
     fun hasDrive(): Boolean = drive != null
 
@@ -152,15 +143,6 @@ class IntakeRepository(
         return drive
     }
 
-    // ✅ 显式提供防御性检查，避免初始化期间触发 GMS 异常
-    private fun getUserIdOrThrow(): String {
-        return auth.currentUser?.uid ?: throw IllegalStateException("未登录，无法上传/读取数据")
-    }
-
-    private fun userCollection(): CollectionReference {
-        val uid = getUserIdOrThrow()
-        return firestore.collection("users").document(uid).collection("entries")
-    }
     /**
      * 將最近 7 天的紀錄上傳到 Google Drive 的 appDataFolder
      * 會產生/更新檔名：mealoo_daily_intake_YYYY-MM-DD.json
@@ -514,49 +496,6 @@ fun IntakeEntry.toMap(): Map<String, Any?> = when (this) {
         "mealId" to mealId
         )
 
-}
-/**
- * 專門處理「社群食譜」相關的遠端存取（Firestore）。
- * - 個人飲食紀錄 → 走 IntakeRepository（Google Drive）
- * - 社群 feed / 分享 → 走 CommunityRepository（Firestore）
- *
- * RecipeEntryDTO / RepostRecipeDTO / toRecipeEntry() 等 DTO 與 mapping
- * 已經在同一個 package 的 IntakeRepository.kt 中定義，可以直接使用。
- */
-class CommunityRepository(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-) {
-
-    /**
-     * 檢查某個食譜是否已經分享到社群
-     */
-    suspend fun isRecipeShared(recipeId: String): Boolean {
-        return try {
-            val docRef = Firebase.firestore
-                .collection("community").document("recipes")
-                .collection("shared").document(recipeId)
-            val snapshot = docRef.get().await()
-            snapshot.exists()
-        } catch (e: Exception) {
-            Log.e("CheckShared", "检查是否已分享失败", e)
-            false // 無法確認時預設未分享
-        }
-    }
-
-    /**
-     * 讀取社群裡所有公開食譜（DTO 格式），呼叫端再用 toRecipeEntry() 轉成 model。
-     */
-    suspend fun loadSharedRecipes(): List<RecipeEntryDTO> {
-        val snapshot = firestore.collection("community")
-            .document("recipes")
-            .collection("shared")
-            .get()
-            .await()
-
-        return snapshot.documents.mapNotNull {
-            it.toObject(RecipeEntryDTO::class.java)
-        }
-    }
 }
 fun Map<String, Any>.toIntakeEntry(): IntakeEntry {
     val type = this["type"] as? String ?: return error("type missing")

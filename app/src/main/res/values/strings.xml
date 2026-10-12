@@ -1113,4 +1113,9 @@
     <string name="edit_meal_customization">Edit Meal Customization</string>
     <string name="track_color">Track Color</string>
     <string name="progress_bar_icon">Progress Bar Icon</string>
+    <string name="cloud_ai_unavailable_standalone">Cloud AI handoff is unavailable in the standalone build. You can still copy the prompt or use local llama.cpp features.</string>
+    <string name="data_use_firebase_desc">This optional cloud build includes legacy Firebase identity and community adapters. Google Drive sign-in is separate from Firebase.</string>
+    <string name="data_use_standalone_cloud_desc">This standalone build does not include Firebase product SDKs or configuration, or external cloud AI. Google Drive sign-in is separate from Firebase.</string>
+    <string name="copy_prompt_action">Copy prompt</string>
+    <string name="send_to_gemini">Send to Gemini</string>
 </resources>

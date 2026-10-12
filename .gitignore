@@ -16,6 +16,7 @@ captures/
 # Local machine and service configuration
 local.properties
 app/google-services.json
+app/src/cloud/google-services.json
 .firebaserc
 .env
 .env.*
