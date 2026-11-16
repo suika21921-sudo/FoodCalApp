@@ -913,18 +913,11 @@
     <string name="shopping_checkin_cart_cleared_desc">已入庫並清空購物車</string>
     <string name="profile_settings_subtitle">基本資料、熱量目標、飲食習慣、作息</string>
     <string name="account_sync_title">帳號與雲端同步</string>
-    <string name="account_sync_subtitle">Google 帳號登入/登出、備份管理、Pro 會員訂閱</string>
+    <string name="account_sync_subtitle">Google 帳號登入/登出與備份管理</string>
     <string name="currency_settings_title">貨幣設定</string>
     <string name="currency_settings_subtitle">管理主要幣別、匯率</string>
     <string name="google_account_title">Google 帳號</string>
     <string name="cloud_not_connected_short">尚未連結</string>
-    <string name="pro_membership_title">Pro 會員訂閱</string>
-    <string name="pro_member_active">PRO 會員 (已啟用)</string>
-    <string name="free_version">免費版</string>
-    <string name="upgrade_unlock_features">升級以解鎖更多功能</string>
-    <string name="restore_purchases">恢復購買</string>
-    <string name="restore_success">權限已恢復</string>
-    <string name="restore_no_record">未找到過往購買紀錄</string>
     <string name="cloud_backup_operations_title">雲端備份操作</string>
     <string name="advanced_debug_view_cloud_files">進階偵錯：查看雲端檔案</string>
     <string name="primary_currency_title">主要幣別</string>
@@ -1017,11 +1010,6 @@
     <string name="select_recipe_to_add_title">選擇食譜加入</string>
     <string name="no_meals">尚無餐點</string>
     <string name="food_consumption_amount">食用量 (g/ml)</string>
-    <string name="pro_feature_title">Pro 專屬功能</string>
-    <string name="pro_feature_message">
-    此功能僅限 Pro 會員使用。\n\n升級 Pro 方案，解鎖更多進階功能。
-    </string>
-    <string name="pro_feature_upgrade">前往升級</string>
     <string name="optimize_route_with_stops">最佳化採買路線（共 %1$d 站）</string>
     <string name="ai_paste_sync_to_database">貼上 AI 回傳內容，自動同步至資料庫</string>
 

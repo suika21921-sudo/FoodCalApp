@@ -57,13 +57,9 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.mealoo.app.data.PreferenceDriveRepository
-import com.mealoo.app.data.repository.SubscriptionRepository
 import com.mealoo.app.ui.LoginScreen
 import com.mealoo.app.ui.MenuPlanningPage
 import com.mealoo.app.ui.SettingsDestination
-import com.revenuecat.purchases.LogLevel
-import com.revenuecat.purchases.Purchases
-import com.revenuecat.purchases.PurchasesConfiguration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -99,21 +95,14 @@ class MainActivity : ComponentActivity() {
         Log.e("Mealoo_DEBUG", "Activity onCreate: ${intent.action}")
         handleDeepLinkIntent(intent)
 
-        // 1. 初始化 RevenueCat
-        // 雖然 debug 模式可以用 public key，但建議還是去後台申請
-        Purchases.logLevel = LogLevel.DEBUG
-        Purchases.configure(PurchasesConfiguration.Builder(this, "goog_ZXKrQIEWNNTCFXEGpBkZhofbBER").build())
-
         setContent {
             val dataStore = IntakeDataStore(applicationContext)
             val recipeDataStore = RecipeDataStore(applicationContext)
-            val subscriptionRepository = remember { SubscriptionRepository() }
 
             AppRoot(
                 deepLinkViewModel = deepLinkViewModel,
                 dataStore = dataStore,
-                recipeDataStore = recipeDataStore,
-                subscriptionRepository = subscriptionRepository
+                recipeDataStore = recipeDataStore
             )
         }
     }
@@ -217,8 +206,7 @@ fun isValidProfile(pref: UserPreference): Boolean {
 fun AppRoot(
     deepLinkViewModel: DeepLinkViewModel,
     dataStore: IntakeDataStore,
-    recipeDataStore: RecipeDataStore,
-    subscriptionRepository: SubscriptionRepository
+    recipeDataStore: RecipeDataStore
 ) {
     val navController: NavHostController = rememberNavController()
     val context = LocalContext.current
@@ -376,8 +364,7 @@ fun AppRoot(
                                     drive = null // 清除 MainActivity 的狀態
                                 }
                             },
-                            startDestination = startDest,
-                            subscriptionRepository = subscriptionRepository
+                            startDestination = startDest
                         )
                     }
 

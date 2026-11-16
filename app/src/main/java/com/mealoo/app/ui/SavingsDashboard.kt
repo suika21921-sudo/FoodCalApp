@@ -69,8 +69,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mealoo.app.R
-import com.mealoo.app.data.repository.SubscriptionRepository
-import com.mealoo.app.ui.design.ProFeatureDialog
 import com.mealoo.app.data.DiscountEventDataStore
 import com.mealoo.app.data.SavingsRecord
 import com.mealoo.app.db.SavingsRepository
@@ -103,12 +101,9 @@ fun SavingsDashboard(
     savingsRepo: SavingsRepository,
     shopRepo: ShopRepository,
     eventStore: DiscountEventDataStore,
-    subscriptionRepo: SubscriptionRepository,
     onBackToMenu: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val isPro by subscriptionRepo.isPro.collectAsState()
-    var showProDialog by remember { mutableStateOf(false) }
 
     val savingsState by savingsRepo.savingsState.collectAsState()
     val records = savingsState.records
@@ -124,81 +119,6 @@ fun SavingsDashboard(
 
     var window by rememberSaveable { mutableStateOf(TrendWindow.DAYS_7) }
     var showClearAllDialog by remember { mutableStateOf(false) }
-
-    if (!isPro) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(R.string.savings_dashboard_title), color = Color.White) },
-                    navigationIcon = {
-                        IconButton(onClick = onBackToMenu) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Color.White)
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent,
-                        titleContentColor = Color.White
-                    )
-                )
-            },
-            containerColor = MealooTechColors.DeepBackground
-        ) { padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 24.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    Icons.Default.Analytics,
-                    contentDescription = null,
-                    tint = MealooTechColors.AccentCyan,
-                    modifier = Modifier.size(80.dp).padding(bottom = 24.dp)
-                )
-                Text(
-                    text = "Pro Feature",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
-                Text(
-                    text = "Upgrade to Pro to access detailed savings analytics, tracking, and insights.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                    color = Color.White.copy(alpha = 0.7f),
-                    modifier = Modifier.padding(bottom = 32.dp)
-                )
-                Button(
-                    onClick = { showProDialog = true },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MealooTechColors.AccentCyan.copy(alpha = 0.2f),
-                        contentColor = MealooTechColors.AccentCyan
-                    ),
-                    shape = CircleShape,
-                    modifier = Modifier
-                        .height(56.dp)
-                        .padding(horizontal = 16.dp)
-                        .mealooTechGlassBorder(CircleShape, MealooTechColors.AccentCyan.copy(alpha = 0.5f))
-                ) {
-                    Text("Unlock with Pro", fontWeight = FontWeight.Bold)
-                }
-            }
-        }
-        if (showProDialog) {
-            ProFeatureDialog(
-                onDismiss = { showProDialog = false },
-                onUpgrade = {
-                    showProDialog = false
-                    // Ideally we should navigate, but we don't have navController here.
-                    // The user can go back and navigate to settings.
-                }
-            )
-        }
-        return
-    }
 
     // --- Currency Logic ---
     // 检测是否有多种币别

@@ -157,9 +157,6 @@ dependencies {
 
     // MediaPipe 已移除，改用 llama.cpp JNI 橋接
 
-    // --- 訂閱與支付 (RevenueCat) ---
-    implementation(libs.revenuecat.purchases)
-
     // --- 第三方工具 ---
     implementation(libs.ucrop)
     implementation(libs.coil.compose)

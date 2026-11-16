@@ -23,7 +23,6 @@ googleApiClient = "2.6.0"
 googleApiDrive = "v3-rev20240123-2.0.0"
 
 # --- 訂閱與支付 ---
-revenuecat = "8.0.0"
 ucrop = "2.2.8"
 coil = "2.7.0"
 
@@ -63,7 +62,6 @@ mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", versio
 accompanist-flowlayout = { group = "com.google.accompanist", name = "accompanist-flowlayout", version.ref = "accompanist" }
 
 # --- 訂閱與圖片 ---
-revenuecat-purchases = { group = "com.revenuecat.purchases", name = "purchases", version.ref = "revenuecat" }
 ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "ucrop" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 

@@ -146,10 +146,8 @@ fun EvaluatePage(
 
                 val mealPlanRepo = remember { com.mealoo.app.db.MealPlanRepository.getInstance(context.applicationContext) }
                 val recipeRepo = remember { com.mealoo.app.data.RecipeRepository(context.applicationContext) }
-                val subscriptionRepo = remember(context.applicationContext) { com.mealoo.app.data.repository.SubscriptionRepository() }
 
                 PromptBuildSection(
-                    subscriptionRepo = subscriptionRepo,
                     deepLinkViewModel = deepLinkViewModel,
                     storageItems = storageItems,
                     userPref = userPref,
@@ -236,7 +234,6 @@ fun EvaluatePage(
                     savingsRepo = savingsRepo,
                     shopRepo = shopRepo,
                     eventStore = eventStore,
-                    subscriptionRepo = remember(appCtx) { com.mealoo.app.data.repository.SubscriptionRepository() },
                     onBackToMenu = { currentMode = EvaluateScreenMode.DASHBOARD }
                 )
             }
@@ -1016,7 +1013,6 @@ enum class PromptBuildTool {
 }
 @Composable
 fun PromptBuildSection(
-    subscriptionRepo: com.mealoo.app.data.repository.SubscriptionRepository,
     deepLinkViewModel: DeepLinkViewModel,
     storageItems: List<InventoryItem>,
     userPref: UserPreference?,
@@ -1116,7 +1112,6 @@ fun PromptBuildSection(
             PromptBuildTool.PROMPT_LIBRARY -> {
                 PromptLibraryFeature(
                     promptStore = promptStore,
-                    subscriptionRepo = subscriptionRepo,
                     onBack = { currentSubTool = PromptBuildTool.MENU }
                 )
             }
@@ -1376,17 +1371,11 @@ fun InlineJsonCorrectionSection(
 @Composable
 fun PromptLibraryFeature(
     promptStore: PromptStore,
-    subscriptionRepo: com.mealoo.app.data.repository.SubscriptionRepository,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val savedPrompts by promptStore.promptsFlow().collectAsState(initial = emptyList())
-    val isPro by subscriptionRepo.isPro.collectAsState()
-
-    // 10 prompts limit for free users
-    val PROMPT_LIMIT = 10
-    val limitReached = !isPro && savedPrompts.size >= PROMPT_LIMIT
 
     // UI 狀態
     var showEditDialog by remember { mutableStateOf(false) }
@@ -1416,31 +1405,13 @@ fun PromptLibraryFeature(
         containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             Column(horizontalAlignment = Alignment.End) {
-                if (limitReached) {
-                    Surface(
-                        color = MaterialTheme.colorScheme.errorContainer,
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    ) {
-                        Text(
-                            text = "免費版上限: $PROMPT_LIMIT/ $PROMPT_LIMIT (請升級Pro)",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onErrorContainer,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                        )
-                    }
-                }
                 FloatingActionButton(
                     onClick = {
-                        if (limitReached) {
-                            Toast.makeText(context, "已達免費用戶 $PROMPT_LIMIT 則上限，請解鎖 Pro 或刪除舊提示詞。", Toast.LENGTH_LONG).show()
-                        } else {
-                            editingPrompt = null
-                            showEditDialog = true
-                        }
+                        editingPrompt = null
+                        showEditDialog = true
                     },
-                    containerColor = if (limitReached) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primary,
-                    contentColor = if (limitReached) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
                         .navigationBarsPadding()
                         .padding(bottom = 88.dp),

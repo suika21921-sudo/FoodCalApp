@@ -61,7 +61,6 @@ import com.mealoo.app.model.EatEntry
 import com.mealoo.app.model.IntakeEntry
 import com.mealoo.app.model.IntakeStats
 import com.mealoo.app.data.MealDefsStore
-import com.mealoo.app.data.repository.SubscriptionRepository
 import com.mealoo.app.model.MealDef
 import com.mealoo.app.model.MealPlanEntry
 import com.mealoo.app.model.DEFAULT_BREAKFAST_ID
@@ -69,7 +68,6 @@ import com.mealoo.app.model.DEFAULT_LUNCH_ID
 import com.mealoo.app.model.DEFAULT_DINNER_ID
 import com.mealoo.app.model.UNCLASSIFIED_MEAL_ID
 import com.mealoo.app.ui.design.MealooCard
-import com.mealoo.app.ui.design.ProFeatureDialog
 import com.mealoo.app.util.stripBrackets
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -138,9 +136,6 @@ data class DailyCachedData(
 
 @Composable
 fun CalendarPage(navController: NavHostController) {
-    val subscriptionRepository = remember { SubscriptionRepository() }
-    val isPro by subscriptionRepository.isPro.collectAsState()
-    var showProDialog by remember { mutableStateOf(false) }
     val view = LocalView.current
     var isDiaryView by remember { mutableStateOf(false) }
     var displayedMonth by remember { mutableStateOf(YearMonth.now()) }
@@ -463,19 +458,10 @@ fun CalendarPage(navController: NavHostController) {
                                         }
                                     },
                                     onDateLongClick = {
-                                        if (isPro) {
-                                            if (!isSelectionMode) {
-                                                isSelectionMode = true
-                                                multiSelectedDates = setOf(date)
-                                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                            }
-                                        } else {
-                                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                                                view.performHapticFeedback(HapticFeedbackConstants.REJECT)
-                                            } else {
-                                                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                                            }
-                                            showProDialog = true
+                                        if (!isSelectionMode) {
+                                            isSelectionMode = true
+                                            multiSelectedDates = setOf(date)
+                                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                         }
                                     }
                                 )
@@ -536,19 +522,10 @@ fun CalendarPage(navController: NavHostController) {
                                 }
                             },
                             onDateLongClick = {
-                                if (isPro) {
-                                    if (!isSelectionMode) {
-                                        isSelectionMode = true
-                                        multiSelectedDates = setOf(date)
-                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    }
-                                } else {
-                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                                        view.performHapticFeedback(HapticFeedbackConstants.REJECT)
-                                    } else {
-                                        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                                    }
-                                    showProDialog = true
+                                if (!isSelectionMode) {
+                                    isSelectionMode = true
+                                    multiSelectedDates = setOf(date)
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 }
                             }
                         )
@@ -573,15 +550,6 @@ fun CalendarPage(navController: NavHostController) {
                 }
             }
         }
-    }
-    if (showProDialog) {
-        ProFeatureDialog(
-            onDismiss = { showProDialog = false },
-            onUpgrade = {
-                showProDialog = false
-                navController.navigate("settings?start=account")
-            }
-        )
     }
 }
 @Composable

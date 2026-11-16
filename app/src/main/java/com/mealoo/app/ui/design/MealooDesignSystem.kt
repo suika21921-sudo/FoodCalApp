@@ -587,38 +587,6 @@ fun MealooCard(
 }
 
 @Composable
-fun ProFeatureDialog(
-    onDismiss: () -> Unit,
-    onUpgrade: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        icon = {
-            Icon(
-                imageVector = Icons.Default.Lock,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
-        },
-        title = {
-            Text(stringResource(R.string.pro_feature_title))
-        },
-        text = {
-            Text(stringResource(R.string.pro_feature_message))
-        },
-        confirmButton = {
-            Button(onClick = onUpgrade) {
-                Text(stringResource(R.string.pro_feature_upgrade))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
-            }
-        }
-    )
-}
-@Composable
 fun CompactTextField(
     value: String,
     onValueChange: (String) -> Unit,

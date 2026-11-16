@@ -67,7 +67,6 @@ import com.mealoo.app.model.AppCurrency
 import com.mealoo.app.data.IntakeDataStore
 import com.mealoo.app.data.IntakeRepository
 import com.mealoo.app.model.MealKind
-import com.mealoo.app.data.repository.SubscriptionRepository // 請確認你的 package 路徑
 import kotlinx.coroutines.CoroutineScope
 import java.io.File
 import java.text.SimpleDateFormat
@@ -152,7 +151,6 @@ fun SettingPage(
     onBack: () -> Unit,
     drive: Drive?,
     intakeStore: IntakeDataStore,
-    subscriptionRepository: SubscriptionRepository,
     onLoginRequest: () -> Unit,
     onLogoutRequest: () -> Unit,
     startDestination: SettingsDestination = SettingsDestination.MENU
@@ -209,7 +207,6 @@ fun SettingPage(
                 AccountAndSyncScreen(
                     drive = drive,
                     intakeStore = intakeStore,
-                    subscriptionRepository = subscriptionRepository,
                     onLoginRequest = onLoginRequest,
                     onLogoutRequest = onLogoutRequest,
                     onBack = { currentDestination = SettingsDestination.MENU }
@@ -311,7 +308,6 @@ fun SettingsMenuScreen(
 fun AccountAndSyncScreen(
     drive: Drive?,
     intakeStore: IntakeDataStore,
-    subscriptionRepository: SubscriptionRepository,
     onLoginRequest: () -> Unit,
     onLogoutRequest: () -> Unit,
     onBack: () -> Unit
@@ -326,13 +322,6 @@ fun AccountAndSyncScreen(
 
     val today = remember { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()) }
     var selectedDate by remember { mutableStateOf(today) }
-
-    // --- Subscription State ---
-    // 取得 Activity 用於發起購買
-    val activity = context as? android.app.Activity
-    val isPro by subscriptionRepository.isPro.collectAsState()
-    val offerings by subscriptionRepository.offerings.collectAsState()
-    var subMessage by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -452,114 +441,7 @@ fun AccountAndSyncScreen(
             }
 
             // ==========================================
-            // 2. Pro 會員訂閱區
-            // ==========================================
-            item {
-                SectionHeader(stringResource(R.string.pro_membership_title), Icons.Default.CardMembership)
-                Spacer(Modifier.height(8.dp))
-
-                // 狀態卡片
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .settingTechCard()
-                        .let { 
-                            if (isPro) it.background(MaterialTheme.colorScheme.primary.copy(alpha = 0.05f))
-                            else it
-                        }
-                ) {
-                    Row(
-                        modifier = Modifier.padding(20.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = if (isPro) Icons.Default.Verified else Icons.Default.Lock,
-                            contentDescription = null,
-                            tint = if (isPro) Color(0xFFA5D6A7) else SettingTechColors.AccentCyan,
-                            modifier = Modifier.size(36.dp)
-                        )
-                        Spacer(Modifier.width(20.dp))
-                        Column {
-                            Text(
-                                text = if (isPro) stringResource(R.string.pro_member_active) else stringResource(R.string.free_version),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = if (isPro) Color(0xFFA5D6A7) else MaterialTheme.colorScheme.onSurface
-                            )
-                            if (!isPro) {
-                                Text(stringResource(R.string.upgrade_unlock_features), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            }
-                        }
-                    }
-                }
-
-                // 購買選項 (如果不是 Pro)
-                if (!isPro && offerings.isNotEmpty()) {
-                    Spacer(Modifier.height(12.dp))
-                    offerings.forEach { pkg ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 6.dp)
-                                .settingTechCard()
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(pkg.product.title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
-                                    Text(pkg.product.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                }
-                                Button(
-                                    onClick = {
-                                        if (activity != null) {
-                                            subMessage = "處理中..."
-                                            subscriptionRepository.purchase(activity, pkg) { errorMsg ->
-                                                subMessage = errorMsg ?: "購買成功！"
-                                            }
-                                        }
-                                    },
-                                    modifier = Modifier.height(36.dp),
-                                    shape = RoundedCornerShape(8.dp),
-                                    colors = ButtonDefaults.buttonColors(containerColor = SettingTechColors.AccentCyan)
-                                ) {
-                                    Text(pkg.product.price.formatted, color = Color.Black, fontWeight = FontWeight.Bold)
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // 恢復購買與訊息
-                Spacer(Modifier.height(8.dp))
-                TextButton(
-                    onClick = {
-                        subMessage = "恢復中..."
-                        subscriptionRepository.restorePurchases { success ->
-                            subMessage = if (success) context.getString(R.string.restore_success) else context.getString(R.string.restore_no_record)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(Icons.Default.Restore, contentDescription = null, modifier = Modifier.size(16.dp))
-                    Spacer(Modifier.width(8.dp))
-                    Text(stringResource(R.string.restore_purchases))
-                }
-
-                if (subMessage.isNotEmpty()) {
-                    Text(
-                        text = subMessage,
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(start = 4.dp)
-                    )
-                }
-            }
-
-            // ==========================================
-            // 3. 雲端備份操作 (僅在已連結時顯示)
+            // 2. 雲端備份操作 (僅在已連結時顯示)
             // ==========================================
                 item {
                     SectionHeader(stringResource(R.string.cloud_backup_operations_title), Icons.Default.CloudSync)

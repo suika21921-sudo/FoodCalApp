@@ -898,18 +898,11 @@
     <string name="shopping_checkin_cart_cleared_desc">チェックインし、カートを空にしました</string>
     <string name="profile_settings_subtitle">基本情報、カロリー目標、食習慣、生活リズム</string>
     <string name="account_sync_title">アカウントとクラウド同期</string>
-    <string name="account_sync_subtitle">Googleアカウントのログイン/ログアウト、バックアップ管理、Pro会員登録</string>
+    <string name="account_sync_subtitle">Googleアカウントのログイン/ログアウトとバックアップ管理</string>
     <string name="currency_settings_title">通貨設定</string>
     <string name="currency_settings_subtitle">主要通貨、為替レートの管理</string>
     <string name="google_account_title">Googleアカウント</string>
     <string name="cloud_not_connected_short">未接続</string>
-    <string name="pro_membership_title">Pro会員登録</string>
-    <string name="pro_member_active">PRO会員 (有効)</string>
-    <string name="free_version">無料版</string>
-    <string name="upgrade_unlock_features">より多くの機能のロックを解除するためにアップグレード</string>
-    <string name="restore_purchases">購入を復元</string>
-    <string name="restore_success">権限が復元されました</string>
-    <string name="restore_no_record">過去の購入履歴が見つかりません</string>
     <string name="cloud_backup_operations_title">クラウドバックアップ操作</string>
     <string name="advanced_debug_view_cloud_files">高度なデバッグ：クラウドファイルを表示</string>
     <string name="primary_currency_title">主要通貨</string>
@@ -1009,10 +1002,6 @@
     <string name="common_bullet">•</string>
     <string name="no_meals">まだメニューがありません</string>
     <string name="food_consumption_amount">摂取量 (g/ml)</string>
-    <string name="pro_feature_title">Pro専用機能</string>
-    <string name="pro_feature_message">この機能はPro会員限定です。アップグレードしてすべての機能のロックを解除してください。
-    </string>
-    <string name="pro_feature_upgrade">アップグレードする</string>
     <string name="optimize_route_with_stops">最適化された買い物ルート（全 %1$d か所）</string>
     <string name="ai_paste_sync_to_database">AIの返答内容を貼り付けると、データベースに自動同期されます</string>
 

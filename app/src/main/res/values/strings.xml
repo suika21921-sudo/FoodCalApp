@@ -913,18 +913,11 @@
     <string name="add_failed">Add failed</string>
     <string name="profile_settings_subtitle">Basic info, calorie goals, diet, routine</string>
     <string name="account_sync_title">Account &amp; Cloud Sync</string>
-    <string name="account_sync_subtitle">Google account login/logout, backup management, Pro membership</string>
+    <string name="account_sync_subtitle">Google account login/logout and backup management</string>
     <string name="currency_settings_title">Currency Settings</string>
     <string name="currency_settings_subtitle">Manage primary currency, exchange rates</string>
     <string name="google_account_title">Google Account</string>
     <string name="cloud_not_connected_short">Not connected</string>
-    <string name="pro_membership_title">Pro Membership</string>
-    <string name="pro_member_active">PRO Member (Active)</string>
-    <string name="free_version">Free Version</string>
-    <string name="upgrade_unlock_features">Upgrade to unlock more features</string>
-    <string name="restore_purchases">Restore Purchases</string>
-    <string name="restore_success">Permissions restored</string>
-    <string name="restore_no_record">No past purchases found</string>
     <string name="cloud_backup_operations_title">Cloud Backup Operations</string>
     <string name="advanced_debug_view_cloud_files">Advanced Debug: View Cloud Files</string>
     <string name="primary_currency_title">Primary Currency</string>
@@ -1036,11 +1029,6 @@
     <string name="common_unit_g_label">g</string>
     <string name="no_meals">No meals available</string>
     <string name="food_consumption_amount">Consumption (g/ml)</string>
-    <string name="pro_feature_title">Pro Feature</string>
-    <string name="pro_feature_message">
-    This feature is available for Pro members only.\n\nUpgrade to Pro to unlock more advanced features.
-    </string>
-    <string name="pro_feature_upgrade">Upgrade Now</string>
     <string name="optimize_route_with_stops">Optimized shopping route (%1$d stops)</string>
     <string name="ai_paste_sync_to_database">Paste AI response content to automatically sync with the database</string>
 

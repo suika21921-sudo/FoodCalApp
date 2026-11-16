@@ -105,8 +105,6 @@ import com.mealoo.app.data.DailyMealConfigStore
 import com.mealoo.app.data.MealDefsStore
 import com.mealoo.app.db.MealPlanRepository
 import com.mealoo.app.data.UserPreference
-import com.mealoo.app.data.repository.SubscriptionRepository
-import com.mealoo.app.ui.design.ProFeatureDialog
 import com.mealoo.app.model.MealKind
 import com.mealoo.app.model.MealPlanEntry
 import com.mealoo.app.model.MenuPlanSummary
@@ -658,9 +656,6 @@ fun SandBoxFeature(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val subRepo = remember { SubscriptionRepository() }
-    val isPro by subRepo.isPro.collectAsState()
-    var showProDialog by remember { mutableStateOf(false) }
     val planStore = remember(context) { MealPlanRepository.getInstance(context) }
     val dailyStore = remember(context) { DailyMealConfigStore(context) }
     val initialTarget = remember(userPref) {
@@ -677,9 +672,7 @@ fun SandBoxFeature(
         )
     }
     val state = viewModel.state
-    val runWithProCheck: (() -> Unit) -> Unit = { action ->
-        if (isPro) action() else showProDialog = true
-    }
+    val runWithProCheck: (() -> Unit) -> Unit = { action -> action() }
     val initialPlans = remember(state.selectedDate, state.rangeData) {
         state.rangeData[state.selectedDate] ?: emptyList()
     }
@@ -874,14 +867,6 @@ fun SandBoxFeature(
                 viewModel.addDirectMacroToDraft(quickMacroName, kcal, p, c, f, activePickerDate)
                 showDirectMacroDialog = false
                 activePickerDate = null
-            }
-        )
-    }
-    if (showProDialog) {
-        ProFeatureDialog(
-            onDismiss = { showProDialog = false },
-            onUpgrade = {
-                showProDialog = false
             }
         )
     }
