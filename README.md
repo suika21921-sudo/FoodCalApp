@@ -8,6 +8,7 @@ Mealoo is an Android food tracking, meal planning, inventory, shopping, and nutr
 - Pantry, refrigerator, freezer, expiry, and consumption management
 - Recipes, meal planning, shopping lists, and discount calculations
 - English, Traditional Chinese, and Japanese localization
+- Bundled food database (about 4,400 ingredients) from Japan (MEXT), the United States (USDA) and Taiwan (TFDA) — see [DATA_SOURCES.md](DATA_SOURCES.md)
 - Optional Google Drive integration, separate from Firebase
 - Optional on-device inference through `llama.cpp`
 - Preserved Firebase/community source in an explicitly enabled cloud flavor

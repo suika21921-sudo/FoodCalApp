@@ -17,6 +17,12 @@ interface FoodDao {
     @Query("SELECT * FROM foods WHERE fdcId = :id LIMIT 1")
     suspend fun getById(id: Int): FoodEntity?
 
+    @Query("SELECT fdcId FROM foods")
+    suspend fun getAllIds(): List<Int>
+
+    @Query("DELETE FROM foods WHERE fdcId IN (:ids)")
+    suspend fun deleteByIds(ids: List<Int>)
+
     @Query("SELECT COUNT(*) FROM foods WHERE energyKcal IS NOT NULL")
     suspend fun countWithEnergy(): Int
 
